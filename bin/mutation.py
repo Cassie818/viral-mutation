@@ -5,8 +5,12 @@ from copy import deepcopy
 def err_model(name):
     raise ValueError('Model {} not supported'.format(name))
 
-def get_model(args, seq_len, vocab_size,
-              inference_batch_size=1500):
+def get_model(
+    args, 
+    seq_len, 
+    vocab_size,
+    inference_batch_size=1500
+    ):
     if args.model_name == 'hmm':
         from hmmlearn.hmm import MultinomialHMM
         model = MultinomialHMM(
@@ -91,7 +95,11 @@ def get_model(args, seq_len, vocab_size,
 
     return model
 
+
 def featurize_seqs(seqs, vocabulary):
+"""
+This function is designed to convert sequence data into a format suitable for model input. 
+"""
     start_int = len(vocabulary) + 1
     end_int = len(vocabulary) + 2
     sorted_seqs = sorted(seqs.keys())
@@ -105,6 +113,9 @@ def featurize_seqs(seqs, vocabulary):
     return X, lens
 
 def fit_model(name, model, seqs, vocabulary):
+    """
+    The fit_model function uses the featurized data to train a model.
+    """
     X, lengths = featurize_seqs(seqs, vocabulary)
     model.fit(X, lengths)
     return model
